@@ -41,3 +41,12 @@ example
 # generated native folders
 /ios
 /android
+
+# Editor and Tooling Configs
+.vscode/
+.claude/
+.idea/
+AGENTS.md
+SKILL.md
+CLAUDE.md
+gemini-prompt.md
