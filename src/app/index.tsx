@@ -182,8 +182,8 @@ export default function HomeScreen() {
           <ThemedText style={styles.generateText}>Generate PDF</ThemedText>
         </Pressable>
 
-        {/* Bottom spacer for tab bar */}
-        <View style={{ height: Spacing.four }} />
+        {/* Bottom spacer */}
+        <View style={{ height: Spacing.three }} />
       </View>
     );
   };
