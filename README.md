@@ -1,56 +1,76 @@
-# Welcome to your Expo app 👋
+# 📄 Image-To-PDF Converter
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A completely local, offline-first mobile application built with React Native and Expo. This app allows users to seamlessly select multiple images from their gallery, reorder them, and convert them into a single, high-quality PDF file—all processed 100% on-device without any cloud uploading.
 
-## Get started
+## 🛠 Tech Stack
 
-1. Install dependencies
+- **Framework**: React Native with [Expo SDK 56](https://docs.expo.dev/)
+- **Architecture**: [Expo Router](https://docs.expo.dev/router/introduction) (File-based routing)
+- **PDF Generation**: [`pdf-lib`](https://pdf-lib.js.org/) (Pure JavaScript, entirely local execution to keep binary size small)
+- **File Management**: `expo-file-system` and `expo-sharing`
+- **Media**: `expo-image-picker` and `expo-image`
+- **Styling**: Native StyleSheet & Vanilla CSS, using a predefined design token system for a modern, glass-morphism aesthetic.
 
+## 🚀 How to Build for Android Locally
+
+If you want to compile a production `.apk` file entirely on your own machine—without relying on Expo Go or the EAS Cloud—follow these steps.
+
+### Prerequisites
+
+Before starting, ensure your development environment is properly configured:
+1. **Node.js & npm** installed.
+2. **Java Development Kit (JDK)** installed (JDK 17 is recommended for React Native 0.85).
+3. **Android SDK** installed (usually via Android Studio or command-line tools).
+4. **Environment Variables Configured:** You **must** have `ANDROID_HOME` set in your terminal profile (e.g., `~/.bashrc` or `~/.zshrc`) so Gradle knows where your SDK is located.
+
+```bash
+# Add this to your ~/.bashrc
+export ANDROID_HOME=$HOME/android-sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator
+```
+
+### Build Instructions
+
+1. **Install Dependencies:**
    ```bash
    npm install
    ```
 
-2. Start the app
-
+2. **Generate the Native Android Folder:**
+   Expo manages the native code dynamically. We need to generate the Android project files based on the Expo configuration.
    ```bash
-   npx expo start
+   npx expo prebuild --platform android --clean
    ```
 
-In the output, you'll find options to open the app in a
+3. **Compile the APK with Gradle:**
+   Navigate into the newly generated Android directory and trigger the release build. This will compile all C++/Java code and bundle the JavaScript.
+   ```bash
+   cd android
+   ./gradlew assembleRelease
+   ```
+   *Note: The first build will take a few minutes as it downloads dependencies and compiles native React Native modules.*
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+4. **Locate the APK:**
+   Once the build is successful, your deployable `.apk` file will be located at:
+   ```text
+   android/app/build/outputs/apk/release/app-release.apk
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 📱 Installing via ADB
 
-## Get a fresh project
-
-When you're ready, run:
+If you have an Android device connected via USB (with USB Debugging enabled) or an active Emulator, you can install the generated APK directly from your terminal using the Android Debug Bridge (`adb`):
 
 ```bash
-npm run reset-project
+adb install android/app/build/outputs/apk/release/app-release.apk
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+## 👨‍💻 Development
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+To run the app in development mode with Hot-Module Replacement (HMR):
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npx expo start
+```
+You can press `a` to open in an Android Emulator, or scan the QR code using the Expo Go app on your physical device.
