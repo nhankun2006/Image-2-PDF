@@ -18,10 +18,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from '@/components/themed-text';
 import {
   type CompressionQuality,
-  type Orientation,
   type PageSize,
   type PdfConfig,
-} from '@/utils/pdf';
+} from '@/types/pdf';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 

@@ -4,7 +4,7 @@
  * Orchestrates PDF generation:
  *   1. Validates inputs
  *   2. Manages loading / progress state
- *   3. Calls the pdf.ts generation engine
+ *   3. Calls the NativeEngine for pure Java PDF generation
  *   4. Triggers native share sheet
  */
 
@@ -12,8 +12,9 @@ import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 
 import { ImageItem } from '@/hooks/useImageList';
-import { generatePdfFromImages, PdfConfig } from '@/utils/pdf';
+import { PdfConfig } from '@/types/pdf';
 import { sharePdf } from '@/utils/fileHelpers';
+import NativeEngineModule from '../../modules/native-engine';
 
 // ---------------------------------------------------------------------------
 // Hook
@@ -31,19 +32,20 @@ export function usePdfGenerator() {
       }
 
       setIsGenerating(true);
-      setProgress(0);
+      setProgress(0); // Native module doesn't stream progress yet, so we just show indeterminate loader
 
       try {
         const uris = images.map((img) => img.uri);
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
-        const fileName = `ImageToPDF_${timestamp}.pdf`;
+        
+        // The native module handles everything asynchronously in a background thread
+        const pdfPath = await NativeEngineModule.generatePdf(
+          uris,
+          config.pageSize,
+          config.orientation,
+          config.quality
+        );
 
-        const pdfPath = await generatePdfFromImages({
-          imageUris: uris,
-          config,
-          pdfFileName: fileName,
-          onProgress: setProgress,
-        });
+        setProgress(1);
 
         // Trigger native share sheet
         try {

@@ -28,7 +28,7 @@ import { BorderRadius, Spacing } from '@/constants/theme';
 import { useImageList } from '@/hooks/useImageList';
 import { usePdfGenerator } from '@/hooks/usePdfGenerator';
 import { useTheme } from '@/hooks/use-theme';
-import { PdfConfig } from '@/utils/pdf';
+import { PdfConfig } from '@/types/pdf';
 import { pickImagesFromGallery, takePhoto } from '@/utils/imageHelpers';
 
 // ---------------------------------------------------------------------------

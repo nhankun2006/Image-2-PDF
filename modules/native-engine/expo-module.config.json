@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["NativeEngineModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.nativeengine.NativeEngineModule"]
+  }
+}
