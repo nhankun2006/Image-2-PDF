@@ -17,11 +17,6 @@ import java.util.List;
 public class PdfProcessor {
     private static final String TAG = "PdfProcessor";
 
-    public static String hello() {
-        Log.d(TAG, "Hello from Pure Java!");
-        return "Hello from Pure Java NativeEngine!";
-    }
-
     public static String generatePdf(Context context, List<String> imageUris, String pageSize, String orientation, String quality) throws Exception {
         Log.d(TAG, "generatePdf called with " + imageUris.size() + " images");
 

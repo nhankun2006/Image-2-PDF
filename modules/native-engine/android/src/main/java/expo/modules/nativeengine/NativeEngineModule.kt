@@ -7,10 +7,6 @@ class NativeEngineModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("NativeEngine")
 
-    Function("hello") {
-      return@Function PdfProcessor.hello()
-    }
-
     AsyncFunction("generatePdf") { imageUris: List<String>, pageSize: String, orientation: String, quality: String ->
       val context = appContext.reactContext ?: throw Exception("React context is null")
       return@AsyncFunction PdfProcessor.generatePdf(context, imageUris, pageSize, orientation, quality)
