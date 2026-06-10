@@ -44,8 +44,13 @@ class NativeEngineModule : Module() {
         return@AsyncFunction
       }
       pendingPromise = promise
-      val photoFile = File(context.cacheDir, "camera_photos/camera_photo_${System.currentTimeMillis()}.jpg")
-      photoFile.parentFile?.mkdirs()
+      val photoDir = File(context.cacheDir, "camera_photos")
+      if (photoDir.exists()) {
+        photoDir.listFiles()?.forEach { it.delete() }
+      }
+      photoDir.mkdirs()
+      
+      val photoFile = File(photoDir, "camera_photo_${System.currentTimeMillis()}.jpg")
       
       val authority = "${context.packageName}.NativeEngineFileProvider"
       cameraPhotoUri = FileProvider.getUriForFile(context, authority, photoFile)

@@ -59,8 +59,18 @@ public class PdfProcessor {
             bitmap.recycle(); // Free memory immediately
         }
 
-        // Save to cache dir
+        // Clean up old cached PDFs to prevent storage bloat
         File cacheDir = context.getCacheDir();
+        File[] cachedFiles = cacheDir.listFiles();
+        if (cachedFiles != null) {
+            for (File file : cachedFiles) {
+                if (file.getName().startsWith("ImageToPDF_") && file.getName().endsWith(".pdf")) {
+                    file.delete();
+                }
+            }
+        }
+
+        // Save to cache dir
         File outFile = new File(cacheDir, "ImageToPDF_" + System.currentTimeMillis() + ".pdf");
         FileOutputStream fos = new FileOutputStream(outFile);
         document.writeTo(fos);
