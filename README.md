@@ -1,76 +1,112 @@
-# 📄 Image-To-PDF Converter
+# 📄 Image-to-PDF Converter
 
-A completely local, offline-first mobile application built with React Native and Expo. This app allows users to seamlessly select multiple images from their gallery, reorder them, and convert them into a single, high-quality PDF file—all processed 100% on-device without any cloud uploading.
+A lightweight, offline-first mobile app built with React Native and Expo SDK 56. Select multiple images from your gallery or camera, reorder and rotate them, configure page settings, then generate a PDF—all processed 100% on-device with zero cloud uploads.
+
+## ✨ Features
+
+- **Multi-image selection** from gallery with ordered picking
+- **Camera capture** for quick single-photo additions
+- **Reorder & rotate** images before conversion
+- **PDF configuration** — Page size (A4 / Letter / Fit Image), orientation, quality
+- **Local PDF generation** via `pdf-lib` (pure JS, no native binary)
+- **Native share sheet** to save, send, or print the generated PDF
+- **Dark/light adaptive theme** with a clean, minimal design
 
 ## 🛠 Tech Stack
 
-- **Framework**: React Native with [Expo SDK 56](https://docs.expo.dev/)
-- **Architecture**: [Expo Router](https://docs.expo.dev/router/introduction) (File-based routing)
-- **PDF Generation**: [`pdf-lib`](https://pdf-lib.js.org/) (Pure JavaScript, entirely local execution to keep binary size small)
-- **File Management**: `expo-file-system` and `expo-sharing`
-- **Media**: `expo-image-picker` and `expo-image`
-- **Styling**: Native StyleSheet & Vanilla CSS, using a predefined design token system for a modern, glass-morphism aesthetic.
+| Layer | Library |
+|-------|---------|
+| Framework | React Native 0.85 + [Expo SDK 56](https://docs.expo.dev/versions/v56.0.0/) |
+| Routing | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based) |
+| PDF engine | [`pdf-lib`](https://pdf-lib.js.org/) (pure JS) |
+| Image picking | `expo-image-picker` |
+| File system | `expo-file-system` (SDK 56 `File`/`Paths` API) |
+| Sharing | `expo-sharing` |
+| Icons | `@expo/vector-icons` (Ionicons) |
+| Styling | Native `StyleSheet` with design tokens in `src/constants/theme.ts` |
 
-## 🚀 How to Build for Android Locally
+## 📁 Project Structure
 
-If you want to compile a production `.apk` file entirely on your own machine—without relying on Expo Go or the EAS Cloud—follow these steps.
+```text
+src/
+├── app/
+│   ├── _layout.tsx            # Root Stack navigator
+│   └── index.tsx              # Home screen (image grid + settings + generate)
+├── components/
+│   ├── EmptyState.tsx         # Placeholder when no images selected
+│   ├── ImageCard.tsx          # Image thumbnail with action buttons
+│   ├── LoadingModal.tsx       # Animated progress overlay
+│   ├── SettingsPanel.tsx      # PDF config (page size, orientation, quality)
+│   └── themed-text.tsx        # Theme-aware Text component
+├── constants/
+│   └── theme.ts               # Single source of truth: Colors, Spacing, BorderRadius, Fonts
+├── hooks/
+│   ├── useImageList.ts        # Image state: add, remove, reorder, rotate
+│   ├── usePdfGenerator.ts     # PDF generation orchestrator
+│   └── use-theme.ts           # Returns current color palette
+└── utils/
+    ├── fileHelpers.ts         # Native share sheet wrapper
+    ├── imageHelpers.ts        # Gallery & camera picker wrappers
+    └── pdf.ts                 # pdf-lib PDF generation engine
+```
+
+## 🚀 How to Build for Android
 
 ### Prerequisites
 
-Before starting, ensure your development environment is properly configured:
-1. **Node.js & npm** installed.
-2. **Java Development Kit (JDK)** installed (JDK 17 is recommended for React Native 0.85).
-3. **Android SDK** installed (usually via Android Studio or command-line tools).
-4. **Environment Variables Configured:** You **must** have `ANDROID_HOME` set in your terminal profile (e.g., `~/.bashrc` or `~/.zshrc`) so Gradle knows where your SDK is located.
+1. **Node.js & npm** installed
+2. **JDK 17+** (17 or later — required by Gradle 8.x used under the hood)
+3. **Android SDK** (via Android Studio or command-line tools)
+4. **`ANDROID_HOME`** environment variable configured:
 
 ```bash
-# Add this to your ~/.bashrc
+# Add to your ~/.bashrc or ~/.zshrc
 export ANDROID_HOME=$HOME/android-sdk
-export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
 ```
 
-### Build Instructions
+### Build Steps for Android
 
-1. **Install Dependencies:**
-   ```bash
-   npm install
-   ```
+```bash
+# 1. Install dependencies
+npm install
 
-2. **Generate the Native Android Folder:**
-   Expo manages the native code dynamically. We need to generate the Android project files based on the Expo configuration.
-   ```bash
-   npx expo prebuild --platform android --clean
-   ```
+# 2. Generate the native Android project
+npx expo prebuild --platform android --clean
 
-3. **Compile the APK with Gradle:**
-   Navigate into the newly generated Android directory and trigger the release build. This will compile all C++/Java code and bundle the JavaScript.
-   ```bash
-   cd android
-   ./gradlew assembleRelease
-   ```
-   *Note: The first build will take a few minutes as it downloads dependencies and compiles native React Native modules.*
+# 3. Compile the release APK
+cd android && ./gradlew assembleRelease
+```
 
-4. **Locate the APK:**
-   Once the build is successful, your deployable `.apk` file will be located at:
-   ```text
-   android/app/build/outputs/apk/release/app-release.apk
-   ```
+The APK will be at:
+```
+android/app/build/outputs/apk/release/app-release.apk
+```
 
-### 📱 Installing via ADB
+### When to Re-prebuild
 
-If you have an Android device connected via USB (with USB Debugging enabled) or an active Emulator, you can install the generated APK directly from your terminal using the Android Debug Bridge (`adb`):
+| Change type | Command needed |
+|-------------|----------------|
+| JS/TS code only (editing `.tsx`, `.ts`) | `cd android && ./gradlew assembleRelease` |
+| Added/removed an npm package | `npx expo prebuild --platform android --clean` then `cd android && ./gradlew assembleRelease` |
+| Changed `app.json` (permissions, plugins) | `npx expo prebuild --platform android --clean` then `cd android && ./gradlew assembleRelease` |
+
+### Install via ADB
 
 ```bash
 adb install android/app/build/outputs/apk/release/app-release.apk
 ```
 
----
-
 ## 👨‍💻 Development
 
-To run the app in development mode with Hot-Module Replacement (HMR):
+Run in development mode with hot reload:
 
 ```bash
 npx expo start
 ```
-You can press `a` to open in an Android Emulator, or scan the QR code using the Expo Go app on your physical device.
+
+Press `a` to open in an Android Emulator, or scan the QR code with the Expo Go app on your device.
+
+## 📜 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

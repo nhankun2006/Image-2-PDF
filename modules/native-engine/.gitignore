@@ -1,0 +1,10 @@
+# Android build output
+android/build/
+android/.gradle/
+
+# iOS build output
+ios/build/
+ios/Pods/
+
+# skip iOS now
+ios/

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Expose the camera_photos subdirectory in the cache directory -->
+    <cache-path name="camera_cache" path="camera_photos/" />
+    <!-- Expose the root cache directory for PDFs -->
+    <cache-path name="pdf_cache" path="." />
+</paths>

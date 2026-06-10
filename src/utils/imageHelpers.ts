@@ -1,12 +1,12 @@
 /**
  * Image Selection Helpers
  *
- * Wrappers around expo-image-picker for gallery multi-select and camera capture.
- * All processing stays on-device — no uploads or telemetry.
+ * Wrappers around NativeEngine for gallery multi-select and camera capture.
+ * All processing stays on-device using pure native Android intents.
  */
 
-import * as ImagePicker from 'expo-image-picker';
-import { Alert, Platform } from 'react-native';
+import { Alert } from 'react-native';
+import NativeEngineModule from '../../modules/native-engine';
 
 // ---------------------------------------------------------------------------
 // Gallery Selection
@@ -19,27 +19,14 @@ import { Alert, Platform } from 'react-native';
 export async function pickImagesFromGallery(
   quality: number = 0.8,
 ): Promise<string[]> {
-  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (status !== 'granted') {
-    Alert.alert(
-      'Permission Required',
-      'Please grant access to your photo library to select images.',
-    );
+  try {
+    const uris = await NativeEngineModule.pickImages();
+    return uris;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    Alert.alert('Gallery Error', `Failed to open gallery: ${message}`);
     return [];
   }
-
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ['images'],
-    allowsMultipleSelection: true,
-    quality,
-    orderedSelection: true,
-  });
-
-  if (result.canceled) {
-    return [];
-  }
-
-  return result.assets.map((asset) => asset.uri);
 }
 
 // ---------------------------------------------------------------------------
@@ -51,23 +38,12 @@ export async function pickImagesFromGallery(
  * Returns an array with one URI, or an empty array if cancelled.
  */
 export async function takePhoto(quality: number = 0.8): Promise<string[]> {
-  const { status } = await ImagePicker.requestCameraPermissionsAsync();
-  if (status !== 'granted') {
-    Alert.alert(
-      'Permission Required',
-      'Please grant camera access to take photos.',
-    );
+  try {
+    const uris = await NativeEngineModule.takePhoto();
+    return uris;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    Alert.alert('Camera Error', `Failed to open camera: ${message}`);
     return [];
   }
-
-  const result = await ImagePicker.launchCameraAsync({
-    mediaTypes: ['images'],
-    quality,
-  });
-
-  if (result.canceled) {
-    return [];
-  }
-
-  return result.assets.map((asset) => asset.uri);
 }
