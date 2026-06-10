@@ -27,10 +27,10 @@ export function EmptyState({ icon, title, description }: EmptyStateProps) {
       <View style={[styles.iconCircle, { backgroundColor: theme.accentSoft }]}>
         <Ionicons name={icon} size={40} color={theme.accent} />
       </View>
-      <ThemedText style={[styles.title, { color: theme.text }]}>
+      <ThemedText style={styles.title}>
         {title}
       </ThemedText>
-      <ThemedText style={[styles.description, { color: theme.textSecondary }]}>
+      <ThemedText themeColor="textSecondary" style={styles.description}>
         {description}
       </ThemedText>
     </View>

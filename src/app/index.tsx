@@ -93,10 +93,10 @@ export default function HomeScreen() {
           <Ionicons name="document-text" size={22} color={theme.accent} />
         </View>
         <View>
-          <ThemedText style={[styles.appTitle, { color: theme.text }]}>
+          <ThemedText style={styles.appTitle}>
             Image to PDF
           </ThemedText>
-          <ThemedText style={[styles.appSubtitle, { color: theme.textSecondary }]}>
+          <ThemedText themeColor="textSecondary" style={styles.appSubtitle}>
             Convert images to PDF locally
           </ThemedText>
         </View>
@@ -128,7 +128,7 @@ export default function HomeScreen() {
           ]}
         >
           <Ionicons name="camera" size={20} color={theme.accent} />
-          <ThemedText style={[styles.sourceButtonText, { color: theme.accent }]}>
+          <ThemedText themeColor="accent" style={styles.sourceButtonText}>
             Camera
           </ThemedText>
         </Pressable>
@@ -138,7 +138,7 @@ export default function HomeScreen() {
       {count > 0 && (
         <View style={styles.countRow}>
           <View style={[styles.countBadge, { backgroundColor: theme.accentSoft }]}>
-            <ThemedText style={[styles.countText, { color: theme.accent }]}>
+            <ThemedText themeColor="accent" style={styles.countText}>
               {count} image{count > 1 ? 's' : ''} selected
             </ThemedText>
           </View>
@@ -150,7 +150,7 @@ export default function HomeScreen() {
             ]}
           >
             <Ionicons name="close-circle" size={16} color={theme.danger} />
-            <ThemedText style={[styles.clearText, { color: theme.danger }]}>
+            <ThemedText themeColor="danger" style={styles.clearText}>
               Clear
             </ThemedText>
           </Pressable>

@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from '@/components/themed-text';
 import {
   type CompressionQuality,
+  type Orientation,
   type PageSize,
   type PdfConfig,
 } from '@/types/pdf';
@@ -45,7 +46,7 @@ export function SettingsPanel({ config, onConfigChange }: SettingsPanelProps) {
       {/* Header */}
       <View style={styles.header}>
         <Ionicons name="settings-outline" size={18} color={theme.accent} />
-        <ThemedText style={[styles.headerText, { color: theme.text }]}>
+        <ThemedText style={styles.headerText}>
           PDF Settings
         </ThemedText>
       </View>
@@ -103,7 +104,7 @@ function SettingRow({ label, icon, theme, children }: SettingRowProps) {
     <View style={styles.settingRow}>
       <View style={styles.settingLabel}>
         <Ionicons name={icon} size={16} color={theme.textSecondary} />
-        <ThemedText style={[styles.labelText, { color: theme.textSecondary }]}>
+        <ThemedText themeColor="textSecondary" style={styles.labelText}>
           {label}
         </ThemedText>
       </View>
