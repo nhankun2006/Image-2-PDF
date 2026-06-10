@@ -62,6 +62,35 @@ class NativeEngineModule : Module() {
       activity.startActivityForResult(intent, 1002)
     }
 
+    AsyncFunction("sharePdf") { pdfUriString: String, promise: Promise ->
+      val activity = appContext.currentActivity
+      val context = appContext.reactContext
+      if (activity == null || context == null) {
+        promise.reject("E_MISSING_ACTIVITY", "Current activity or context is null", null)
+        return@AsyncFunction
+      }
+
+      try {
+        val fileUri = Uri.parse(pdfUriString)
+        val file = File(fileUri.path!!)
+        
+        val authority = "${context.packageName}.NativeEngineFileProvider"
+        val contentUri = FileProvider.getUriForFile(context, authority, file)
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+          type = "application/pdf"
+          putExtra(Intent.EXTRA_STREAM, contentUri)
+          addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        
+        val chooser = Intent.createChooser(intent, "Share PDF Document")
+        activity.startActivity(chooser)
+        promise.resolve(null)
+      } catch (e: Exception) {
+        promise.reject("E_SHARE_FAILED", "Failed to share PDF: ${e.message}", e)
+      }
+    }
+
     OnActivityResult { _, payload ->
       val promise = pendingPromise ?: return@OnActivityResult
       

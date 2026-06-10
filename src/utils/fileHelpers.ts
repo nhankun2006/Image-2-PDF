@@ -1,10 +1,11 @@
 /**
  * File System Helpers
  *
- * Wrapper around expo-sharing for sharing generated PDFs.
+ * Wrapper around NativeEngine for sharing generated PDFs via pure Android intents.
  */
 
-import * as Sharing from 'expo-sharing';
+import { Alert } from 'react-native';
+import NativeEngineModule from '../../modules/native-engine';
 
 // ---------------------------------------------------------------------------
 // Sharing
@@ -14,13 +15,10 @@ import * as Sharing from 'expo-sharing';
  * Opens the native share sheet for a local PDF file.
  */
 export async function sharePdf(pdfPath: string): Promise<void> {
-  const isAvailable = await Sharing.isAvailableAsync();
-  if (!isAvailable) {
-    throw new Error('Sharing is not available on this device.');
+  try {
+    await NativeEngineModule.sharePdf(pdfPath);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    Alert.alert('Sharing Failed', `Could not share PDF: ${message}`);
   }
-  await Sharing.shareAsync(pdfPath, {
-    mimeType: 'application/pdf',
-    dialogTitle: 'Share PDF Document',
-    UTI: 'com.adobe.pdf',
-  });
 }
