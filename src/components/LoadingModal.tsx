@@ -76,11 +76,11 @@ export function LoadingModal({ visible, progress }: LoadingModalProps) {
             </View>
           </Animated.View>
 
-          <ThemedText style={[styles.title, { color: theme.text }]}>
+          <ThemedText style={styles.title}>
             Generating PDF…
           </ThemedText>
 
-          <ThemedText style={[styles.subtitle, { color: theme.textSecondary }]}>
+          <ThemedText themeColor="textSecondary" style={styles.subtitle}>
             Processing your images
           </ThemedText>
 
@@ -100,7 +100,7 @@ export function LoadingModal({ visible, progress }: LoadingModalProps) {
             />
           </View>
 
-          <ThemedText style={[styles.percentage, { color: theme.textSecondary }]}>
+          <ThemedText themeColor="textSecondary" style={styles.percentage}>
             {percentage}%
           </ThemedText>
         </View>

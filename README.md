@@ -1,5 +1,7 @@
 # 📄 Image-to-PDF Converter
 
+> ⚠️ **Important Note for Developers:** This project is **not** built for web previews, running through Expo Go, or testing on mobile emulators. It utilizes custom native modules and is specifically set up to be lightweight, fast, and shipped as a production-ready application for **physical devices**.
+
 A lightweight, offline-first mobile app built with React Native and Expo SDK 56. Select multiple images from your gallery or camera, reorder and rotate them, configure page settings, then generate a PDF—all processed 100% on-device with zero cloud uploads.
 
 ## ✨ Features
@@ -8,7 +10,7 @@ A lightweight, offline-first mobile app built with React Native and Expo SDK 56.
 - **Camera capture** for quick single-photo additions
 - **Reorder & rotate** images before conversion
 - **PDF configuration** — Page size (A4 / Letter / Fit Image), orientation, quality
-- **Local PDF generation** via `pdf-lib` (pure JS, no native binary)
+- **Local PDF generation** via custom Java Native Module (high performance, fully offline)
 - **Native share sheet** to save, send, or print the generated PDF
 - **Dark/light adaptive theme** with a clean, minimal design
 
@@ -18,7 +20,7 @@ A lightweight, offline-first mobile app built with React Native and Expo SDK 56.
 |-------|---------|
 | Framework | React Native 0.85 + [Expo SDK 56](https://docs.expo.dev/versions/v56.0.0/) |
 | Routing | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based) |
-| PDF engine | [`pdf-lib`](https://pdf-lib.js.org/) (pure JS) |
+| PDF engine | Custom Java Native Module (`modules/native-engine`) |
 | Image picking | `expo-image-picker` |
 | File system | `expo-file-system` (SDK 56 `File`/`Paths` API) |
 | Sharing | `expo-sharing` |
@@ -46,8 +48,7 @@ src/
 │   └── use-theme.ts           # Returns current color palette
 └── utils/
     ├── fileHelpers.ts         # Native share sheet wrapper
-    ├── imageHelpers.ts        # Gallery & camera picker wrappers
-    └── pdf.ts                 # pdf-lib PDF generation engine
+    └── imageHelpers.ts        # Gallery & camera picker wrappers
 ```
 
 ## 🚀 How to Build for Android
@@ -74,8 +75,11 @@ npm install
 # 2. Generate the native Android project
 npx expo prebuild --platform android --clean
 
-# 3. Compile the release APK
+# 3.1 Compile the fully compatible/general release APK (support all cpu architectures, larger size, slower build)
 cd android && ./gradlew assembleRelease
+
+# 3.2 (NOTE: Android only) Compile optimized APK for arm64-v8a only (smaller size, faster build, native modern Anroids)
+cd android && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a
 ```
 
 The APK will be at:
@@ -83,11 +87,14 @@ The APK will be at:
 android/app/build/outputs/apk/release/app-release.apk
 ```
 
+NOTE: if the command 3.2 fails, pick the 3.1 version to build a universal APK that supports all architectures.
+
 ### When to Re-prebuild
 
 | Change type | Command needed |
 |-------------|----------------|
 | JS/TS code only (editing `.tsx`, `.ts`) | `cd android && ./gradlew assembleRelease` |
+| Native code (editing `.kt`, `.java`, `.cpp`) | `cd android && ./gradlew assembleRelease` (Do **not** run prebuild) |
 | Added/removed an npm package | `npx expo prebuild --platform android --clean` then `cd android && ./gradlew assembleRelease` |
 | Changed `app.json` (permissions, plugins) | `npx expo prebuild --platform android --clean` then `cd android && ./gradlew assembleRelease` |
 
@@ -99,13 +106,13 @@ adb install android/app/build/outputs/apk/release/app-release.apk
 
 ## 👨‍💻 Development
 
-Run in development mode with hot reload:
+Since this project relies on custom native modules, it **cannot** be run in the standard Expo Go app or web preview. It is highly recommended to test on a physical Android device.
+
+To compile and run a debug build on a connected physical device:
 
 ```bash
-npx expo start
+npx expo run:android --device
 ```
-
-Press `a` to open in an Android Emulator, or scan the QR code with the Expo Go app on your device.
 
 ## 📜 License
 
