@@ -8,7 +8,7 @@ A lightweight, offline-first mobile app built with React Native and Expo SDK 56.
 - **Camera capture** for quick single-photo additions
 - **Reorder & rotate** images before conversion
 - **PDF configuration** — Page size (A4 / Letter / Fit Image), orientation, quality
-- **Local PDF generation** via `pdf-lib` (pure JS, no native binary)
+- **Local PDF generation** via custom Java Native Module (high performance, fully offline)
 - **Native share sheet** to save, send, or print the generated PDF
 - **Dark/light adaptive theme** with a clean, minimal design
 
@@ -18,7 +18,7 @@ A lightweight, offline-first mobile app built with React Native and Expo SDK 56.
 |-------|---------|
 | Framework | React Native 0.85 + [Expo SDK 56](https://docs.expo.dev/versions/v56.0.0/) |
 | Routing | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based) |
-| PDF engine | [`pdf-lib`](https://pdf-lib.js.org/) (pure JS) |
+| PDF engine | Custom Java Native Module (`modules/native-engine`) |
 | Image picking | `expo-image-picker` |
 | File system | `expo-file-system` (SDK 56 `File`/`Paths` API) |
 | Sharing | `expo-sharing` |
@@ -46,8 +46,7 @@ src/
 │   └── use-theme.ts           # Returns current color palette
 └── utils/
     ├── fileHelpers.ts         # Native share sheet wrapper
-    ├── imageHelpers.ts        # Gallery & camera picker wrappers
-    └── pdf.ts                 # pdf-lib PDF generation engine
+    └── imageHelpers.ts        # Gallery & camera picker wrappers
 ```
 
 ## 🚀 How to Build for Android
