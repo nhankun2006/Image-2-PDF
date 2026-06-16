@@ -17,9 +17,32 @@ import java.util.List;
 public class PdfProcessor {
     private static final String TAG = "PdfProcessor";
 
-    public static String generatePdf(Context context, List<String> imageUris, String pageSize, String orientation, String quality) throws Exception {
+    public static String generatePdf(Context context, List<String> imageUris, String pageSize, String orientation, String quality, String compressionMode) throws Exception {
         Log.d(TAG, "generatePdf called with " + imageUris.size() + " images");
 
+        File cacheDir = context.getCacheDir();
+        File outFile = new File(cacheDir, "ImageToPDF_" + System.currentTimeMillis() + ".pdf");
+
+        if ("Direct".equals(compressionMode)) {
+            JpegToPdfWriter.generatePdf(context, imageUris, pageSize, orientation, outFile);
+        } else {
+            generatePdfNative(context, imageUris, pageSize, orientation, quality, outFile);
+        }
+
+        // Clean up old cached PDFs to prevent storage bloat
+        File[] cachedFiles = cacheDir.listFiles();
+        if (cachedFiles != null) {
+            for (File file : cachedFiles) {
+                if (file.getName().startsWith("ImageToPDF_") && file.getName().endsWith(".pdf") && !file.equals(outFile)) {
+                    file.delete();
+                }
+            }
+        }
+
+        return outFile.toURI().toString();
+    }
+
+    private static void generatePdfNative(Context context, List<String> imageUris, String pageSize, String orientation, String quality, File outFile) throws Exception {
         PdfDocument document = new PdfDocument();
 
         for (String uriString : imageUris) {
@@ -59,25 +82,10 @@ public class PdfProcessor {
             bitmap.recycle(); // Free memory immediately
         }
 
-        // Clean up old cached PDFs to prevent storage bloat
-        File cacheDir = context.getCacheDir();
-        File[] cachedFiles = cacheDir.listFiles();
-        if (cachedFiles != null) {
-            for (File file : cachedFiles) {
-                if (file.getName().startsWith("ImageToPDF_") && file.getName().endsWith(".pdf")) {
-                    file.delete();
-                }
-            }
-        }
-
-        // Save to cache dir
-        File outFile = new File(cacheDir, "ImageToPDF_" + System.currentTimeMillis() + ".pdf");
         FileOutputStream fos = new FileOutputStream(outFile);
         document.writeTo(fos);
         document.close();
         fos.close();
-
-        return outFile.toURI().toString();
     }
 
     private static Bitmap decodeBitmap(Context context, Uri uri, String quality) throws Exception {

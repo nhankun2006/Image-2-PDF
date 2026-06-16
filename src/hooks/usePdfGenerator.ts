@@ -42,7 +42,8 @@ export function usePdfGenerator() {
           uris,
           config.pageSize,
           config.orientation,
-          config.quality
+          config.quality,
+          config.compressionMode
         );
 
         setProgress(1);

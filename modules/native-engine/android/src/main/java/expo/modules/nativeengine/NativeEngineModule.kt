@@ -17,9 +17,9 @@ class NativeEngineModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("NativeEngine")
 
-    AsyncFunction("generatePdf") { imageUris: List<String>, pageSize: String, orientation: String, quality: String ->
+    AsyncFunction("generatePdf") { imageUris: List<String>, pageSize: String, orientation: String, quality: String, compressionMode: String ->
       val context = appContext.reactContext ?: throw Exception("React context is null")
-      return@AsyncFunction PdfProcessor.generatePdf(context, imageUris, pageSize, orientation, quality)
+      return@AsyncFunction PdfProcessor.generatePdf(context, imageUris, pageSize, orientation, quality, compressionMode)
     }
 
     AsyncFunction("pickImages") { promise: Promise ->

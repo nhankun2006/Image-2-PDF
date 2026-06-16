@@ -39,6 +39,7 @@ const DEFAULT_CONFIG: PdfConfig = {
   pageSize: 'A4',
   orientation: 'Portrait',
   quality: 'High',
+  compressionMode: 'Direct',
 };
 
 // ---------------------------------------------------------------------------

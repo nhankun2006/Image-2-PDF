@@ -84,6 +84,17 @@ export function SettingsPanel({ config, onConfigChange }: SettingsPanelProps) {
           theme={theme}
         />
       </SettingRow>
+
+      {/* Compression Mode */}
+      <SettingRow label="Compression Engine" icon="hardware-chip-outline" theme={theme}>
+        <SegmentedControl<import('@/types/pdf').CompressionMode>
+          options={['Direct', 'Native']}
+          labels={['Direct JPEG (Fast)', 'Native Canvas']}
+          selected={config.compressionMode}
+          onSelect={(v) => onConfigChange({ ...config, compressionMode: v })}
+          theme={theme}
+        />
+      </SettingRow>
     </View>
   );
 }
