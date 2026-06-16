@@ -8,7 +8,8 @@
  *   4. Generate and share the PDF
  */
 
-import React, { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -17,7 +18,6 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 
 import { EmptyState } from '@/components/EmptyState';
 import { ImageCard } from '@/components/ImageCard';
@@ -25,9 +25,9 @@ import { LoadingModal } from '@/components/LoadingModal';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { ThemedText } from '@/components/themed-text';
 import { BorderRadius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import { useImageList } from '@/hooks/useImageList';
 import { usePdfGenerator } from '@/hooks/usePdfGenerator';
-import { useTheme } from '@/hooks/use-theme';
 import { PdfConfig } from '@/types/pdf';
 import { pickImagesFromGallery, takePhoto } from '@/utils/imageHelpers';
 
@@ -93,12 +93,7 @@ export default function HomeScreen() {
           <Ionicons name="document-text" size={22} color={theme.accent} />
         </View>
         <View>
-          <ThemedText style={styles.appTitle}>
-            Image to PDF
-          </ThemedText>
-          <ThemedText themeColor="textSecondary" style={styles.appSubtitle}>
-            Convert images to PDF locally
-          </ThemedText>
+          <ThemedText style={styles.appTitle}>Image to PDF</ThemedText>
         </View>
       </View>
 
