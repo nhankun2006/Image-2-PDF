@@ -20,10 +20,7 @@ A lightweight, offline-first mobile app built with React Native and Expo SDK 56.
 |-------|---------|
 | Framework | React Native 0.85 + [Expo SDK 56](https://docs.expo.dev/versions/v56.0.0/) |
 | Routing | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based) |
-| PDF engine | Custom Java Native Module (`modules/native-engine`) |
-| Image picking | `expo-image-picker` |
-| File system | `expo-file-system` (SDK 56 `File`/`Paths` API) |
-| Sharing | `expo-sharing` |
+| Native Core | Custom Java Native Module (`modules/native-engine`) handling PDF, Images, I/O & Sharing |
 | Icons | `@expo/vector-icons` (Ionicons) |
 | Styling | Native `StyleSheet` with design tokens in `src/constants/theme.ts` |
 

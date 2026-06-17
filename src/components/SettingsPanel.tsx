@@ -7,23 +7,23 @@
  *   - Quality (Low / Medium / High)
  */
 
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {
   Pressable,
   StyleSheet,
   View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 import { ThemedText } from '@/components/themed-text';
+import { BorderRadius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import {
   type CompressionQuality,
   type Orientation,
   type PageSize,
   type PdfConfig,
 } from '@/types/pdf';
-import { BorderRadius, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
 
 // ---------------------------------------------------------------------------
 // Props
@@ -74,6 +74,17 @@ export function SettingsPanel({ config, onConfigChange }: SettingsPanelProps) {
         />
       </SettingRow>
 
+      {/* Compression Mode */}
+      <SettingRow label="Compression" icon="hardware-chip-outline" theme={theme}>
+        <SegmentedControl<import('@/types/pdf').CompressionMode>
+          options={['Origin', 'Decompress']}
+          labels={['Origin', 'Decompress']}
+          selected={config.compressionMode}
+          onSelect={(v) => onConfigChange({ ...config, compressionMode: v })}
+          theme={theme}
+        />
+      </SettingRow>
+
       {/* Quality */}
       <SettingRow label="Quality" icon="sparkles-outline" theme={theme}>
         <SegmentedControl<CompressionQuality>
@@ -82,8 +93,10 @@ export function SettingsPanel({ config, onConfigChange }: SettingsPanelProps) {
           selected={config.quality}
           onSelect={(v) => onConfigChange({ ...config, quality: v })}
           theme={theme}
+          disabled={config.compressionMode === 'Origin'}
         />
       </SettingRow>
+
     </View>
   );
 }
