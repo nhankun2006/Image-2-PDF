@@ -23,7 +23,7 @@ public class PdfProcessor {
         File cacheDir = context.getCacheDir();
         File outFile = new File(cacheDir, "ImageToPDF_" + System.currentTimeMillis() + ".pdf");
 
-        if ("Direct".equals(compressionMode)) {
+        if ("Origin".equals(compressionMode)) {
             JpegToPdfWriter.generatePdf(context, imageUris, pageSize, orientation, outFile);
         } else {
             generatePdfNative(context, imageUris, pageSize, orientation, quality, outFile);
