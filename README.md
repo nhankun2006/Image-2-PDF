@@ -27,6 +27,11 @@ A lightweight, offline-first mobile app built with React Native and Expo SDK 56.
 ## 📁 Project Structure
 
 ```text
+modules/native-engines/        # Custom native engine modules
+├── android/                   # Android-specific (Java/Kotlin) native source & Gradle config
+├── ios/                       # Later: Swift/Obj-C source for iOS (currently not implemented)
+└── src/                       # React Native Expo brigde to help exporting native modules
+
 src/
 ├── app/
 │   ├── _layout.tsx            # Root Stack navigator
@@ -47,6 +52,10 @@ src/
     ├── fileHelpers.ts         # Native share sheet wrapper
     └── imageHelpers.ts        # Gallery & camera picker wrappers
 ```
+
+### `modules/native-engines/`
+
+Houses the project's custom Expo Native Modules written in Java/Kotlin. These modules handle all heavy-lifting that runs off the JS thread — PDF compilation, image scaling/compression, secure file I/O, and native share-sheet integration. Everything executes 100% on-device with no network calls, keeping the app fully offline-capable.
 
 ## 🚀 How to Build for Android
 
