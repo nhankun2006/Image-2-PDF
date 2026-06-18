@@ -1,18 +1,18 @@
 # 📄 Image-to-PDF Converter
 
-> ⚠️ **Important Note for Developers:** This project is **not** built for web previews, running through Expo Go, or testing on mobile emulators. It utilizes custom native modules and is specifically set up to be lightweight, fast, and shipped as a production-ready application for **physical devices**.
+> ⚠️ **Important Note for Developers:** This project is **not** built for web previews, running through Expo Go, or testing on mobile emulators (Ex: Android Studio). It utilizes custom native modules and is specifically set up to be lightweight and shipped as a production-ready application for **physical devices**.
 
-A lightweight, offline-first mobile app built with React Native and Expo SDK 56. Select multiple images from your gallery or camera, reorder and rotate them, configure page settings, then generate a PDF—all processed 100% on-device with zero cloud uploads.
+A lightweight, offline-first mobile app built with React Native, Expo SDK 56, and native Android SDK. Generate PDFs—all processed 100% on-device with zero cloud uploads.
 
 ## ✨ Features
 
-- **Multi-image selection** from gallery with ordered picking
-- **Camera capture** for quick single-photo additions
-- **Reorder & rotate** images before conversion
-- **PDF configuration** — Page size (A4 / Letter / Fit Image), orientation, quality
-- **Local PDF generation** via custom Java Native Module (high performance, fully offline)
-- **Native share sheet** to save, send, or print the generated PDF
-- **Dark/light adaptive theme** with a clean, minimal design
+- **Multi-image selection**
+- **Camera capture**
+- **Reorder & rotate**
+- **PDF output configuration**
+- **Local PDF generation**
+- **Native share sheet** - to save, send, or print the generated PDF
+- **Dark/light adaptive theme**
 
 ## 🛠 Tech Stack
 
@@ -20,7 +20,7 @@ A lightweight, offline-first mobile app built with React Native and Expo SDK 56.
 |-------|---------|
 | Framework | React Native 0.85 + [Expo SDK 56](https://docs.expo.dev/versions/v56.0.0/) |
 | Routing | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based) |
-| Native Core | Custom Java Native Module (`modules/native-engine`) handling PDF, Images, I/O & Sharing |
+| Native Core | Custom Java Native Module (`modules/native-engines`) handling PDF, Images, I/O & Sharing |
 | Icons | `@expo/vector-icons` (Ionicons) |
 | Styling | Native `StyleSheet` with design tokens in `src/constants/theme.ts` |
 
@@ -33,9 +33,7 @@ modules/native-engines/        # Custom native engine modules
 └── src/                       # React Native Expo brigde to help exporting native modules
 
 src/
-├── app/
-│   ├── _layout.tsx            # Root Stack navigator
-│   └── index.tsx              # Home screen (image grid + settings + generate)
+├── app/                       # Root navigation and Home screens (Expo Router)
 ├── components/
 │   ├── EmptyState.tsx         # Placeholder when no images selected
 │   ├── ImageCard.tsx          # Image thumbnail with action buttons
@@ -48,21 +46,16 @@ src/
 │   ├── useImageList.ts        # Image state: add, remove, reorder, rotate
 │   ├── usePdfGenerator.ts     # PDF generation orchestrator
 │   └── use-theme.ts           # Returns current color palette
-└── utils/
-    ├── fileHelpers.ts         # Native share sheet wrapper
-    └── imageHelpers.ts        # Gallery & camera picker wrappers
+└── utils/                     # Wrapper functions for native module calls, file handling, etc.
 ```
 
-### `modules/native-engines/`
-
-Houses the project's custom Expo Native Modules written in Java/Kotlin. These modules handle all heavy-lifting that runs off the JS thread — PDF compilation, image scaling/compression, secure file I/O, and native share-sheet integration. Everything executes 100% on-device with no network calls, keeping the app fully offline-capable.
 
 ## 🚀 How to Build for Android
 
 ### Prerequisites
 
-1. **Node.js & npm** installed
-2. **JDK 17+** (17 or later — required by Gradle 8.x used under the hood)
+1. **Node.js & npm**
+2. **JDK 17+**
 3. **Android SDK** (via Android Studio or command-line tools)
 4. **`ANDROID_HOME`** environment variable configured:
 
@@ -93,8 +86,6 @@ The APK will be at:
 android/app/build/outputs/apk/release/app-release.apk
 ```
 
-NOTE: if the command 3.2 fails, pick the 3.1 version to build a universal APK that supports all architectures.
-
 ### When to Re-prebuild
 
 | Change type | Command needed |
@@ -111,8 +102,6 @@ adb install android/app/build/outputs/apk/release/app-release.apk
 ```
 
 ## 👨‍💻 Development
-
-Since this project relies on custom native modules, it **cannot** be run in the standard Expo Go app or web preview. It is highly recommended to test on a physical Android device.
 
 To compile and run a debug build on a connected physical device:
 
