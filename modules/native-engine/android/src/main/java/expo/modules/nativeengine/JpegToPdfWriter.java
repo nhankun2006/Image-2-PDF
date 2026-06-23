@@ -20,9 +20,9 @@ public class JpegToPdfWriter {
     private List<Long> xrefs = new ArrayList<>();
     private int objectCounter = 0;
 
-    public static void generatePdf(Context context, List<String> imageUris, String pageSize, String orientation, File outFile) throws Exception {
+    public static void generatePdf(Context context, List<String> imageUris, String pageSize, String orientation, File outFile, PdfProcessor.ProgressCallback progressCallback) throws Exception {
         JpegToPdfWriter writer = new JpegToPdfWriter();
-        writer.createPdf(context, imageUris, pageSize, orientation, outFile);
+        writer.createPdf(context, imageUris, pageSize, orientation, outFile, progressCallback);
     }
 
     private void writeString(String str) throws Exception {
@@ -41,7 +41,7 @@ public class JpegToPdfWriter {
         return ++objectCounter;
     }
 
-    private void createPdf(Context context, List<String> imageUris, String pageSize, String orientation, File outFile) throws Exception {
+    private void createPdf(Context context, List<String> imageUris, String pageSize, String orientation, File outFile, PdfProcessor.ProgressCallback progressCallback) throws Exception {
         FileOutputStream fos = new FileOutputStream(outFile);
         this.out = fos;
         this.currentOffset = 0;
@@ -60,6 +60,9 @@ public class JpegToPdfWriter {
         // Reserve offsets for Catalog (1) and Pages (2)
         nextObj(); // 1
         nextObj(); // 2
+
+        int total = imageUris.size();
+        int current = 0;
 
         for (String uriString : imageUris) {
             Uri uri = Uri.parse(uriString);
@@ -136,6 +139,11 @@ public class JpegToPdfWriter {
             pageObjects.add(pageObj);
             writeString(pageObj + " 0 obj\n");
             writeString("<< /Type /Page /Parent " + pagesObj + " 0 R /MediaBox [0 0 " + pageW + " " + pageH + "] /Resources << /XObject << /I1 " + imageObj + " 0 R >> >> /Contents " + contentsObj + " 0 R >>\nendobj\n");
+
+            current++;
+            if (progressCallback != null) {
+                progressCallback.onProgress(current, total);
+            }
         }
 
         // Now inject Catalog offset

@@ -17,9 +17,18 @@ class NativeEngineModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("NativeEngine")
 
+    Events("onPdfProgress")
+
     AsyncFunction("generatePdf") { imageUris: List<String>, pageSize: String, orientation: String, quality: String, compressionMode: String ->
       val context = appContext.reactContext ?: throw Exception("React context is null")
-      return@AsyncFunction PdfProcessor.generatePdf(context, imageUris, pageSize, orientation, quality, compressionMode)
+      val progressCallback = PdfProcessor.ProgressCallback { current, total ->
+        sendEvent("onPdfProgress", mapOf(
+          "current" to current,
+          "total" to total,
+          "progress" to if (total > 0) current.toDouble() / total.toDouble() else 0.0
+        ))
+      }
+      return@AsyncFunction PdfProcessor.generatePdf(context, imageUris, pageSize, orientation, quality, compressionMode, progressCallback)
     }
 
     AsyncFunction("pickImages") { promise: Promise ->

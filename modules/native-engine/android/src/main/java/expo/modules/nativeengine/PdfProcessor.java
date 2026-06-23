@@ -17,16 +17,20 @@ import java.util.List;
 public class PdfProcessor {
     private static final String TAG = "PdfProcessor";
 
-    public static String generatePdf(Context context, List<String> imageUris, String pageSize, String orientation, String quality, String compressionMode) throws Exception {
+    public interface ProgressCallback {
+        void onProgress(int current, int total);
+    }
+
+    public static String generatePdf(Context context, List<String> imageUris, String pageSize, String orientation, String quality, String compressionMode, ProgressCallback progressCallback) throws Exception {
         Log.d(TAG, "generatePdf called with " + imageUris.size() + " images");
 
         File cacheDir = context.getCacheDir();
         File outFile = new File(cacheDir, "ImageToPDF_" + System.currentTimeMillis() + ".pdf");
 
         if ("Origin".equals(compressionMode)) {
-            JpegToPdfWriter.generatePdf(context, imageUris, pageSize, orientation, outFile);
+            JpegToPdfWriter.generatePdf(context, imageUris, pageSize, orientation, outFile, progressCallback);
         } else {
-            generatePdfNative(context, imageUris, pageSize, orientation, quality, outFile);
+            generatePdfNative(context, imageUris, pageSize, orientation, quality, outFile, progressCallback);
         }
 
         // Clean up old cached PDFs to prevent storage bloat
@@ -42,8 +46,10 @@ public class PdfProcessor {
         return outFile.toURI().toString();
     }
 
-    private static void generatePdfNative(Context context, List<String> imageUris, String pageSize, String orientation, String quality, File outFile) throws Exception {
+    private static void generatePdfNative(Context context, List<String> imageUris, String pageSize, String orientation, String quality, File outFile, ProgressCallback progressCallback) throws Exception {
         PdfDocument document = new PdfDocument();
+        int total = imageUris.size();
+        int current = 0;
 
         for (String uriString : imageUris) {
             Uri uri = Uri.parse(uriString);
@@ -80,6 +86,11 @@ public class PdfProcessor {
 
             document.finishPage(page);
             bitmap.recycle(); // Free memory immediately
+
+            current++;
+            if (progressCallback != null) {
+                progressCallback.onProgress(current, total);
+            }
         }
 
         FileOutputStream fos = new FileOutputStream(outFile);

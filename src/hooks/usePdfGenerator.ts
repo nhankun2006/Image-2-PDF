@@ -3,7 +3,7 @@
  *
  * Orchestrates PDF generation:
  *   1. Validates inputs
- *   2. Manages loading / progress state
+ *   2. Manages loading / progress state via native events
  *   3. Calls the NativeEngine for pure Java PDF generation
  *   4. Triggers native share sheet
  */
@@ -15,6 +15,7 @@ import { ImageItem } from '@/hooks/useImageList';
 import { PdfConfig } from '@/types/pdf';
 import { sharePdf } from '@/utils/fileHelpers';
 import NativeEngineModule from '../../modules/native-engine';
+import type { PdfProgressEvent } from '../../modules/native-engine';
 
 // ---------------------------------------------------------------------------
 // Hook
@@ -32,7 +33,15 @@ export function usePdfGenerator() {
       }
 
       setIsGenerating(true);
-      setProgress(0); // Native module doesn't stream progress yet, so we just show indeterminate loader
+      setProgress(0);
+
+      // Subscribe to native progress events
+      const subscription = NativeEngineModule.addListener(
+        'onPdfProgress',
+        (event: PdfProgressEvent) => {
+          setProgress(event.progress);
+        },
+      );
 
       try {
         const uris = images.map((img) => img.uri);
@@ -61,6 +70,7 @@ export function usePdfGenerator() {
           error instanceof Error ? error.message : 'An unknown error occurred.';
         Alert.alert('Generation Failed', message);
       } finally {
+        subscription.remove();
         setIsGenerating(false);
         setProgress(0);
       }
