@@ -1,8 +1,8 @@
 # 📄 Image-to-PDF Converter
 
-> ⚠️ **Important Note for Developers:** This project is **not** built for web previews, running through Expo Go, or testing on mobile emulators (Ex: Android Studio). It utilizes custom native modules and is specifically set up to be lightweight and shipped as a production-ready application for **physical devices**.
+> ⚠️ **Important Note for Developers:** This project is **not** built for web previews, Expo Go, or testing on mobile emulators (Ex: Android Studio). It is specifically set up to be lightweight and shipped as a production-ready application for **physical devices**.
 
-A lightweight, offline-first mobile app built with React Native, Expo SDK 56, and native Android SDK. Generate PDFs—all processed 100% on-device with zero cloud uploads.
+A lightweight, offline-first mobile app built with Expo SDK 56, and native Android SDK. Generate PDFs—all processed 100% on-device with zero cloud uploads.
 
 ## ✨ Features
 
@@ -20,34 +20,6 @@ A lightweight, offline-first mobile app built with React Native, Expo SDK 56, an
 |-------|---------|
 | Framework | React Native 0.85 + [Expo SDK 56](https://docs.expo.dev/versions/v56.0.0/) |
 | Routing | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based) |
-| Native Core | Custom Java Native Module (`modules/native-engines`) handling PDF, Images, I/O & Sharing |
-| Icons | `@expo/vector-icons` (Ionicons) |
-| Styling | Native `StyleSheet` with design tokens in `src/constants/theme.ts` |
-
-## 📁 Project Structure
-
-```text
-modules/native-engines/        # Custom native engine modules
-├── android/                   # Android-specific (Java/Kotlin) native source & Gradle config
-├── ios/                       # Later: Swift/Obj-C source for iOS (currently not implemented)
-└── src/                       # React Native Expo brigde to help exporting native modules
-
-src/
-├── app/                       # Root navigation and Home screens (Expo Router)
-├── components/
-│   ├── EmptyState.tsx         # Placeholder when no images selected
-│   ├── ImageCard.tsx          # Image thumbnail with action buttons
-│   ├── LoadingModal.tsx       # Animated progress overlay
-│   ├── SettingsPanel.tsx      # PDF config (page size, orientation, quality)
-│   └── themed-text.tsx        # Theme-aware Text component
-├── constants/
-│   └── theme.ts               # Single source of truth: Colors, Spacing, BorderRadius, Fonts
-├── hooks/
-│   ├── useImageList.ts        # Image state: add, remove, reorder, rotate
-│   ├── usePdfGenerator.ts     # PDF generation orchestrator
-│   └── use-theme.ts           # Returns current color palette
-└── utils/                     # Wrapper functions for native module calls, file handling, etc.
-```
 
 
 ## 🚀 How to Build for Android
@@ -109,6 +81,4 @@ To compile and run a debug build on a connected physical device:
 npx expo run:android --device
 ```
 
-## 📜 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+## 📜 License MIT
